@@ -15,5 +15,9 @@
 	<classpathentry kind="lib" path="References/jaxb-api.jar"/>
 	<classpathentry kind="lib" path="References/jaxb-core.jar"/>
 	<classpathentry kind="lib" path="References/jaxb-impl.jar"/>
+	<classpathentry kind="lib" path="References/activation-1.1.jar"/>
+	<classpathentry kind="lib" path="References/mail-1.4.5.jar"/>
+	<classpathentry kind="lib" path="References/smtp-1.4.4.jar"/>
+	<classpathentry kind="lib" path="References/mongo-java-driver-3.4.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
