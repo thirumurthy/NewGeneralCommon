@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -17,6 +18,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -193,5 +195,80 @@ public class RestClient {
 			  return "";
 		}
 	  }
+	  @SuppressWarnings("deprecation")
+	public static String GetWithHeader(String url,Map<String,String> header) throws ClientProtocolException, IOException
+		{
+			HttpResponse execute = null;
+			InputStream content= null;
+			//HttpClient client=null;
+			    
+			//DefaultHttpClient client = new DefaultHttpClient();
+			try
+			{ 
+			DefaultHttpClient client=null;
+				try
+				{
+				
+				 client = new DefaultHttpClient();
+				}
+				catch (Exception e) {
 
+					e.printStackTrace();
+				}
+			 HttpGet httpGet = new HttpGet(url);
+			// add header
+				if(header!=null && header.size()>0)
+				 for (Map.Entry<String,String> entry : header.entrySet())  
+					 httpGet.setHeader(entry.getKey(), entry.getValue()); 
+					 
+			 execute= client.execute(httpGet);
+			  content = execute.getEntity().getContent();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				return "";
+			}
+			 return getStringResponse(content);  
+		}
+	  
+	  @SuppressWarnings("deprecation")
+	public static String GetWithHeader(String url,Map<String,String> header,String proxyip) throws ClientProtocolException, IOException
+		{
+			HttpResponse execute = null;
+			InputStream content= null;
+			HttpHost proxy =null;
+			//HttpClient client=null;
+			    
+			//DefaultHttpClient client = new DefaultHttpClient();
+			try
+			{ 
+				if(proxyip!=null&&!proxyip.equals("")&&proxyip.trim().length()!=0)
+				  proxy = new HttpHost(proxyip.split(":")[0],Integer.parseInt( proxyip.split(":")[1]));
+			DefaultHttpClient client=null;
+				try
+				{
+				
+				 client = new DefaultHttpClient();
+				 if(proxyip!=null&&!proxyip.equals("")&&proxyip.trim().length()!=0)
+				 client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,proxy);
+				}
+				catch (Exception e) {
+
+					e.printStackTrace();
+				}
+			 HttpGet httpGet = new HttpGet(url);
+			// add header
+				if(header!=null && header.size()>0)
+				 for (Map.Entry<String,String> entry : header.entrySet())  
+					 httpGet.setHeader(entry.getKey(), entry.getValue()); 
+					 
+			 execute= client.execute(httpGet);
+			  content = execute.getEntity().getContent();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				return "";
+			}
+			 return getStringResponse(content);  
+		}
 }

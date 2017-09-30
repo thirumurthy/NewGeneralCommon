@@ -2,6 +2,7 @@ package Common;
 
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -50,6 +51,37 @@ public class JSON {
 	}
 	
 	
+	public static String get1stObjectAsStr(String jsonstr)
+	{
+		 
+		try
+		{  
+			JsonArray jsonArray=deSerializeArray(jsonstr);
+			return jsonArray.get(0).getAsJsonObject().toString();
+		}
+		catch (Exception e) {
+			 return "";
+			// TODO: handle exception
+		}
+	}
+	
+	
+	public static String getFirstObject(String jsonstr)
+	{
+		JsonArray jsonArray =new JsonArray();
+		try
+		{  
+			 JsonParser jsonParser = new JsonParser();
+			  jsonArray = (JsonArray) jsonParser.parse(jsonstr);
+			return jsonArray.get(0).toString();
+		}
+		catch (Exception e) {
+			return "";
+			// TODO: handle exception
+		}
+	}
+	
+	
 	public static String serialize(Object obj)
 	{
 		 
@@ -64,6 +96,19 @@ public class JSON {
 		}
 	}
 	
+	public static String serializeWithNull(Object obj)
+	{
+		 
+		try
+		{  
+			Gson gson = new GsonBuilder().serializeNulls().create();   
+			return gson.toJson(obj);
+		}
+		catch (Exception e) {
+			return null;
+			// TODO: handle exception
+		}
+	}
 	
 	public static JsonObject deSerializeObject(String jsonstr)
 	{
