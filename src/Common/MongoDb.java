@@ -203,6 +203,7 @@ public static MongoClient  getMongoDbConnection(String config) throws Exception 
 		
 		try
 		{ 
+			
 			DBCollection coll =  getCollection(  config,  Collection); 
 			  BasicDBObject andQuery = (BasicDBObject) JSON.deserialize(query, BasicDBObject.class.getName()) ;
 			   cursor = coll.find(andQuery) ;
@@ -218,6 +219,40 @@ public static MongoClient  getMongoDbConnection(String config) throws Exception 
 		return respdata.toString();
 		
 	}
+	public static String QuerySearch(String config,String Collection,String query,int limit,int offset)
+	{
+		 
+		JsonArray respdata=new JsonArray();
+		DBCursor cursor = null;
+
+		JsonObject result=new JsonObject();
+		try
+		{   
+			result.addProperty("Count", 0);
+			result.add("Data",respdata);
+			limit=limit==0?10:limit;
+			limit=limit>100?100:limit; // performance improvement
+			DBCollection coll =  getCollection(  config,  Collection); 
+			  BasicDBObject andQuery = (BasicDBObject) JSON.deserialize(query, BasicDBObject.class.getName()) ;
+			   cursor = coll.find(andQuery).skip(offset).limit(limit) ; 
+			   result.addProperty("Count", coll.find(andQuery).count());
+				  if(result.get("Count").getAsInt()>0)
+				  {
+					  while (cursor.hasNext()) {
+						  JsonObject jobj=JSON.deSerializeObject(cursor.next().toString());
+						  respdata.add(jobj);
+					  } 
+					  result.add("Data", respdata);
+				  }
+		}
+		catch (Exception e) {
+			System.out.println(e);
+			// TODO: handle exception
+		}
+		return result.toString();
+		
+	}
+	
 	/**
 	 * Update fields and push item into array. Leave empty to leave the fields.
 	 * @param config
